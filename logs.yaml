@@ -1,0 +1,21 @@
+---
+
+-  hosts: all
+   become: true
+   pre_tasks:
+
+   -  name: Update Repository Index
+      tags: always
+      package:
+        update_cache: yes
+      changed_when: false
+      
+-  hosts: ControlNode
+   become: true
+   roles:
+     - name: Ubuntu_docker
+
+-  hosts: ControlNode
+   become: true
+   roles:
+    - Ubuntu_prometheus

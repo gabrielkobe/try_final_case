@@ -1,0 +1,44 @@
+
+  -  name: Install Docker in Ubuntu
+     apt:
+       name: docker.io
+
+  -  name: Start and Enable Docker in Ubuntu
+     systemd:
+       name: docker
+       state: restarted
+       enabled: true
+
+  -  name: Add User to Docker Group
+     user:
+       name: "{{ ansible_user }}"
+       groups: docker
+
+  -  name: Create directory for Docker in Ubuntu
+     file:
+       path: ~/docker
+       state: directory
+
+  -  name: Create dockerfile in Docker Directory in Ubuntu
+     file:
+       path: ~/docker/dockerfile
+       state: touch
+
+  -  name: Modify dockerfile with Content in Ubuntu
+     copy:
+       dest: ~/docker/dockerfile
+       content: |
+         FROM ubuntu
+         MAINTAINER seruelas <qrkhseruelas@tip.edu.ph>
+         # Skip Prompts
+         ARG DEBIAN_FRONTEND=noninteractive
+         # Update Packages
+         RUN apt update; apt dist-upgrade -y
+         # Install MariaDB and Apache2
+         RUN apt install -y apache2
+         RUN apt install -y mariadb-client-core-10.6
+         # Set entrypoint
+         ENTRYPOINT apache2ctl -D FOREGROUND
+         
+
+
